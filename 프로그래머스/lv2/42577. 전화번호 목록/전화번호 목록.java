@@ -4,7 +4,7 @@ class Solution {
     public boolean solution(String[] phone_book) {
         Map<String, Integer> map = new HashMap<>();
         
-        Arrays.sort(phone_book, (a,b) -> a.length() - b.length());
+        Arrays.sort(phone_book);
         
         
         for (String p : phone_book) {
