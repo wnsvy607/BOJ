@@ -1,6 +1,8 @@
 import java.util.*;
-
 class Solution {
+    
+    private static int answer = 1;
+    
     public int solution(String[][] clothes) {
         Map<String, Integer> map = new HashMap<>();
         
@@ -10,15 +12,7 @@ class Solution {
             map.put(clothes[i][1] , map.getOrDefault(clothes[i][1], 0) + 1);
         }
         
-        int answer = 1;
-        
-        Iterator<Map.Entry<String, Integer>> iter = map.entrySet().iterator();
-        
-        while(iter.hasNext()) {
-            int n = iter.next().getValue();
-            answer *= (n + 1);
-        }
-        
+        map.entrySet().forEach(e -> answer *= (e.getValue() + 1));
         
         return answer - 1;
         
