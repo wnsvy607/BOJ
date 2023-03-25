@@ -1,7 +1,7 @@
 import java.util.*;
 class Solution {
     
-    private static int answer = 1;
+    private int answer = 1;
     
     public int solution(String[][] clothes) {
         Map<String, Integer> map = new HashMap<>();
