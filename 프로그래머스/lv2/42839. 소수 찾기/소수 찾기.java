@@ -1,16 +1,14 @@
 import java.util.*;
 
 class Solution {
-    private Set<String> set = new HashSet<>();
+    Set<Integer> set = new HashSet<>();
+    int answer = 0;
     
     public int solution(String numbers) {
+            
+        recursive("", numbers);
         
-        boolean[] visited = new boolean[numbers.length()];
-        perm(numbers, "", visited, 0, 0);
-        int answer = 0;
-        
-        for(String s : set) {
-            int num = Integer.parseInt(s);
+        for(Integer num : set) {
             if(num <= 1)
                 continue;
             boolean isPrimary = true;
@@ -23,25 +21,18 @@ class Solution {
             if(isPrimary)
                 answer++;
         }
-        
-        
+          
         return answer;
         
     }
     
-    public void perm(String numbers, String num, boolean[] visited, int index, int depth) {
-        if(depth == numbers.length()) 
-            return;            
+    public void recursive(String combi, String others) {
+        if(!combi.equals(""))
+            set.add(Integer.valueOf(combi));
         
-        for(int i = index; i < numbers.length(); i++) {
-            if(visited[i])
-                continue;
-            String start = Integer.toString(Integer.parseInt(num + numbers.charAt(i)));           
-            set.add(start);
-            visited[i] = true;
-            perm(numbers, start, visited, 0, depth + 1);
-            visited[i] = false;
-        }   
+        for(int i = 0; i < others.length(); i++) {
+            recursive(combi + others.charAt(i), others.substring(0, i) + others.substring(i + 1));
+        }
     }
     
     
