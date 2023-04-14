@@ -1,29 +1,46 @@
+import java.util.*;
+
 class Solution {
-    int[][] graph;
+    int[][] cMap;
+    int answer = 0;
+    int n;
     boolean[] visited;
     
+    
+    
     public int solution(int n, int[][] computers) {
+        cMap = computers;
+        this.n = n;
         visited = new boolean[n];
-        graph = computers;
-        int network = 0;
         
-        for(int i = 0; i < n ; i++) {
-            if(visited[i]) continue;
-            
-            dfs(i, n);
-            network++;
+        
+        // Stack<Integer> stk = new Stack<>();
+        for(int i = 0; i < n;  i++) {
+            DFS(i);
         }
-        
-        return network;
+        return answer;
     }
     
-    public void dfs(int start, int n) {
-        visited[start] = true;
+    
+    public void DFS(int node) {
+        // 탈출
+        if(!visited[node])
+            answer++;
+        
+        // 수행
         for(int i = 0; i < n; i++) {
-            if(visited[i]) continue;    
-            if(graph[start][i] == 1)
-                dfs(i, n);
+            if(i == node)
+                continue;
+            
+            if(!visited[i] && cMap[node][i] == 1) {
+                visited[i] = true;
+                DFS(i);
+            }
         }
         
-    } 
+        
+        
+        
+        
+    }
 }
