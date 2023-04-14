@@ -1,60 +1,65 @@
 import java.util.*;
 
 class Solution {
-    
-    static int[] dx = {0, 1, 0, -1};
-    static int[] dy = {1, 0, -1, 0};
+    int[][] map;
     int answer = -1;
-    
+    int n, m;
+    int[] dy = {0,0,1,-1};
+    int[] dx = {1,-1,0,0};
     
     public int solution(int[][] maps) {
+        map = maps;
+        n = maps.length;
+        m = maps[0].length;
         
-
-        boolean[][] visited = new boolean[maps.length][maps[0].length];
-        int[][] valueMap = new int[maps.length][maps[0].length];
-        
+        BFS();        
+        return answer;
+    }
+    
+    
+    public void BFS() {
+        int[][] visited = new int[n][m];
         Queue<Pair> q = new LinkedList<>();
+        
         q.add(new Pair(0, 0));
-        visited[0][0] = true;
-        valueMap[0][0] = 1;
-        valueMap[maps.length - 1][maps[0].length - 1] = -1;
+        visited[0][0] = 1;
         
-        
-        while(q.peek() != null ) {
-            Pair pair = q.peek();
-            
-            for(int i = 0; i < 4 ; i++) {
-                int cx = pair.x + dx[i];
-                int cy = pair.y + dy[i];
-
-                if(cy < 0 || cx < 0|| cy >= maps.length || cx >= maps[0].length)
-                    continue;
-
-                if(!visited[cy][cx] && maps[cy][cx] == 1) {
-                    q.add(new Pair(cy, cx));
-                    if(valueMap[cy][cx] < 1)
-                        valueMap[cy][cx] = valueMap[pair.y][pair.x] + 1;
-                    else
-                        valueMap[cy][cx] = Math.min(valueMap[cy][cx], valueMap[pair.y][pair.x] + 1);
-                    visited[cy][cx] = true;
-                }
+        while(!q.isEmpty()) {
+            Pair pa = q.poll();   
+            if(pa.y == n - 1 && pa.x == m - 1) {  
+                answer = visited[pa.y][pa.x];
+                return;
             }
             
-            q.poll();        
+            for(int i = 0; i < 4; i++) {
+                int cy = dy[i] + pa.y;
+                int cx = dx[i] + pa.x;
+                if(cy < 0 || cx < 0 || cy >= n || cx >= m)
+                    continue;
+                
+                if(visited[cy][cx] == 0 && map[cy][cx] == 1) {
+                    visited[cy][cx] = visited[pa.y][pa.x] + 1;
+                    q.add(new Pair(cy, cx));
+                }
+                
+            }
         }
         
-        
-        return valueMap[maps.length - 1][maps[0].length - 1];
     }
+    
+    
     
 }
 
 class Pair {
+    
     int y;
     int x;
     
     public Pair(int y, int x) {
         this.y = y;
         this.x = x;
-    }
+    } 
+    
+    
 }
