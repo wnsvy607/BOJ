@@ -1,77 +1,71 @@
 import java.util.*;
+import java.util.stream.*;
 
 class Solution {
-    int n;
-    boolean[][] map;
+    int answer = -1;
     int[] visited;
+    List<int[]> lists;
+    int tIdx = -1;
     
     
-    public int solution(String begin, String target, String[] words) {
-        n = words.length;
-        visited = new int[n + 1];
-        map = new boolean[n + 1][n + 1];
+    public int solution(String begin, String target, String[] w) {
         
-        // 0번째 행, 열 만들기
-        for(int i = 0; i < n; i++) {
-            if(isChangable(begin, words[i])) {
-                map[0][i + 1] = true;
-                map[i + 1][0] = true;                
+        List<String> words = Arrays.stream(w).collect(Collectors.toList());
+        words.add(begin);
+        lists = new ArrayList<>();
+        visited = new int[words.size()];
+        
+        int tempIdx = 0;
+        for(String a : words) {
+            if(a.equals(target))
+                tIdx = tempIdx;
+            List<Integer> list = new ArrayList<>();
+            int index = 0;
+            for(String b : words) {
+                if(isChangeable(a,b))
+                    list.add(index);
+                index++;
             }
+            lists.add(list.stream().mapToInt(i -> i).toArray());
+            tempIdx++;
         }
         
-        // 1 ~ n번째 행, 열 만들기
-        for(int i = 0; i < n; i++) {
-            for(int j = i; j < n; j++) {
-                if(isChangable(words[i], words[j])) {
-                    map[i + 1][j + 1] = true;
-                    map[j + 1][i + 1] = true;
-                }
-                
-            }
-        }
+        if(tIdx == -1)
+            return 0;
+        BFS(w.length);
         
-        
-        Queue<Integer> q = new LinkedList<>();
-        q.add(-1);
-        visited[0] = 1;
-        
-        while(q.peek() != null) {
-            
-            // words 기준
-            int cur = q.peek();
-            String curStr = "";
-            if(cur == -1) {
-                curStr = begin;
-                cur = 0;
-            }
-            else 
-                curStr = words[cur - 1];
-            
-            if(curStr.equals(target))
-                return visited[cur] - 1;
-            
-            for(int i = 0; i < n; i++) {
-                if(visited[i + 1] < 1 && map[cur][i + 1]) {
-                    visited[i + 1] = visited[cur] + 1;
-                    q.add(i + 1);
-                }
-            }
-            
-            
-            
-            q.poll();
-        }
-        
-        return 0;
+        return answer;
     }
     
-    public boolean isChangable(String a, String b) {
+    public void BFS(int start) {
+        
+        Queue<Integer> q = new LinkedList<>();
+            
+        q.add(start);
+        visited[start] = 1;
+        
+        while(!q.isEmpty()){
+            int node = q.poll();
+            if(node == tIdx)
+                answer = visited[node] - 1;
+            
+            for(int v : lists.get(node)) {
+                if(visited[v] == 0) {
+                    visited[v] = visited[node] + 1;
+                    q.add(v);
+                }    
+            }
+        }
+    }
+    
+    
+    public boolean isChangeable(String a, String b) {
         int cnt = 0;
-        for(int i = 0; i < a.length() ; i++) {
+        for(int i = 0; i < a.length(); i++) {
             if(a.charAt(i) != b.charAt(i))
                 cnt++;
         }
-        if(cnt < 2)
+        if(cnt == 1)
             return true;
         
         return false;
