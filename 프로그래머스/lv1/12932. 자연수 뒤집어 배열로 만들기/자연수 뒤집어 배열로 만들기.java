@@ -2,14 +2,16 @@ import java.util.*;
 
 class Solution {
     public int[] solution(long n) {
-        List<Integer> list = new ArrayList<>();
+        String str = String.valueOf(n);
+        int len = str.length();
+        int[] arr = new int[len];
         
-        while(n > 0) {
-            int num = (int) (n % 10L);
-            list.add(num);            
-            n = n / 10L;
+        for(int i = 0; i < len; i++) {
+            arr[i] = Integer.parseInt(str.substring(len-i-1, len -i));
         }
         
-        return list.stream().mapToInt(i -> i).toArray();
+        
+        
+        return arr;
     }
 }
