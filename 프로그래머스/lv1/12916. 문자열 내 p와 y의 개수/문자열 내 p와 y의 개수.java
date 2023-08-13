@@ -15,8 +15,6 @@ class Solution {
         }
         
 
-        if(p == y)
-            return true;
-        return false;
+        return p == y;
     }
 }
