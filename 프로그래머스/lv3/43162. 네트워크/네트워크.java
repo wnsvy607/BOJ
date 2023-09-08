@@ -1,46 +1,64 @@
 import java.util.*;
 
 class Solution {
-    int[][] cMap;
-    int answer = 0;
-    int n;
-    boolean[] visited;
-    
-    
-    
-    public int solution(int n, int[][] computers) {
-        cMap = computers;
-        this.n = n;
-        visited = new boolean[n];
+    public int solution(int n, int[][] cp) {
         
+        DisjointSet ds = new DisjointSet(n);
+        boolean[][] visited = new boolean[n][n];
         
-        // Stack<Integer> stk = new Stack<>();
-        for(int i = 0; i < n;  i++) {
-            DFS(i);
-        }
-        return answer;
-    }
-    
-    
-    public void DFS(int node) {
-        // 탈출
-        if(!visited[node])
-            answer++;
-        
-        // 수행
+
         for(int i = 0; i < n; i++) {
-            if(i == node)
-                continue;
-            
-            if(!visited[i] && cMap[node][i] == 1) {
-                visited[i] = true;
-                DFS(i);
+            for(int j = 0; j < n; j++) {
+                if(i == j || visited[i][j])
+                    continue;
+                if(cp[i][j] == 1) {
+                    ds.union(i, j);
+                    visited[i][j] = visited[j][i] = true;
+                 }
             }
         }
         
+        return getNumberOfNetworks(ds);
+    }
+    
+    int getNumberOfNetworks(DisjointSet ds) {
+        Set<Integer> set = new HashSet<>();
         
+        for(int par : ds.parent) {
+            set.add(ds.find(par));
+        }
         
+        return set.size();
+    }
+    
+    
+    class DisjointSet {
+        int[] parent;
         
+        DisjointSet(int size) {
+            parent = new int[size];
+            for(int i = 0; i < size; i++) {
+                parent[i] = i;
+            }
+            
+        }
+        
+        int find(int node) {
+            if(parent[node] != node) parent[node] = find(parent[node]);
+            return parent[node];    
+        }
+        
+        boolean union(int u, int v) {
+            int ru = find(u);
+            int rv = find(v);
+            
+            if(ru == rv)
+                return false;
+            else
+                parent[rv] = ru;
+            return true;
+        }
         
     }
+    
 }
