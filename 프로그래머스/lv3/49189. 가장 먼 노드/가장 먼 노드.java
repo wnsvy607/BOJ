@@ -6,7 +6,6 @@ class Solution {
         Queue<Integer> q = new LinkedList<>();
         
         int[] dist = new int[n + 1];
-        boolean[] visited = new boolean[n + 1];
         HashSet<Integer>[] graph = new HashSet[n + 1];
         
         for(int[] e : edge) {
@@ -21,7 +20,6 @@ class Solution {
         }
         
         q.add(1);
-        visited[1] = true;
         dist[1] = 1;
         int max = 0;
         
@@ -31,12 +29,11 @@ class Solution {
             HashSet<Integer> nodes = graph[u];
             
             for(int next : nodes) {
-                if(visited[next])
+                if(dist[next] != 0)
                     continue;
                 dist[next] = dist[u] + 1;
                 max = Math.max(max, dist[next]);
                 q.add(next);
-                visited[next] = true;
             }
         }
         
