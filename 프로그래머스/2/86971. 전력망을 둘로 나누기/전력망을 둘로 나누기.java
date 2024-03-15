@@ -16,12 +16,11 @@ class Solution {
             int v2 = wire[1];
             edges[v1][v2] = false;
             edges[v2][v1] = false;
-            boolean[] visited = new boolean[n+1];
-            int r1 = bfs(n, visited, edges, v1);
-            int r2 = bfs(n, visited, edges, v2);
+            boolean[] visited = new boolean[n + 1];
+            int result = bfs(n, visited, edges, v1);
             edges[v1][v2] = true;
             edges[v2][v1] = true;
-            answer = Math.min(Math.abs(r1 - r2), answer);
+            answer = Math.min(Math.abs(n - result * 2), answer);
         }
         
         
