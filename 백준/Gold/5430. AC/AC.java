@@ -12,14 +12,14 @@ public class Main {
 
 		int t = Integer.parseInt(br.readLine());
 
-		int mode = 0;
+		boolean reverse;
 		int[] pointer = new int[2];
 		for (int i = 0; i < t; i++) {
 			String operations = br.readLine();
 			int n = Integer.parseInt(br.readLine());
 			String[] arr = br.readLine().split(",");
 			if (n == 0) {
-				if(operations.contains("D"))
+				if (operations.contains("D"))
 					bw.write("error");
 				else
 					bw.write("[]");
@@ -31,42 +31,46 @@ public class Main {
 
 			pointer[0] = -1;
 			pointer[1] = n;
-			mode = 0;
+			reverse = false;
 
-			boolean error = false;
+			int buffer = 0;
 			for (int j = 0; j < operations.length(); j++) {
 				if (operations.charAt(j) == 'R') {
-					mode = mode == 1 ? 0 : 1;
+					if (reverse)
+						pointer[1] -= buffer;
+					else
+						pointer[0] += buffer;
+					buffer = 0;
+					reverse = !reverse;
 					continue;
 				}
-				//버림 연산시 총 인덱스를 넘는다면 error 출력
-				if (pointer[1] - pointer[0] == 1) {
-					error = true;
-					break;
-				}
 
-				if (mode == 0)
-					pointer[mode]++;
-				else
-					pointer[mode]--;
+				buffer++;
 			}
 
-			if (error)
+			if (buffer != 0) {
+				if (reverse)
+					pointer[1] -= buffer;
+				else
+					pointer[0] += buffer;
+			}
+
+			if (pointer[1] - pointer[0] < 1)
 				bw.write("error");
 			else {
 				StringBuilder sb = new StringBuilder();
 				sb.append("[");
 
-				if (mode == 0) {
-					for (int j = pointer[0] + 1; j < pointer[1]; j++) {
-						sb.append(arr[j]);
-						if (j != pointer[1] - 1)
-							sb.append(",");
-					}
-				} else {
+				if (reverse) {
 					for (int j = pointer[1] - 1; j > pointer[0]; j--) {
 						sb.append(arr[j]);
 						if (j != pointer[0] + 1)
+							sb.append(",");
+					}
+				} else {
+					for (int j = pointer[0] + 1; j < pointer[1]; j++) {
+						sb.append(arr[j]);
+						if (j != pointer[1] - 1)
 							sb.append(",");
 					}
 				}
