@@ -3,11 +3,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.PriorityQueue;
 
 public class Main {
 
@@ -42,12 +38,11 @@ public class Main {
 
 		while (leftFish > 0) {
 
-			List<Point> cands = bfs(y, x);
-			if (cands.isEmpty())
+			Point next = bfs(y, x);
+			if (next == null)
 				break;
-			cands.sort(Comparator.naturalOrder());
-			Point next = cands.get(0);
 			total += next.distance;
+			q.clear();
 
 			if (++fish == size) {
 				size++;
@@ -83,26 +78,23 @@ public class Main {
 
 		@Override
 		public int compareTo(Point p) {
-			int compare = Integer.compare(this.y, p.y);
-			if (compare == 0)
-				return Integer.compare(this.x, p.x);
-			return compare;
+			return this.distance != p.distance ? Integer.compare(this.distance, p.distance) :
+				this.y != p.y ? Integer.compare(this.y, p.y) : Integer.compare(this.x, p.x);
 		}
 	}
 
-	static List<Point> bfs(int y, int x) {
-		Queue<Point> q = new LinkedList<>();
+	static PriorityQueue<Point> q = new PriorityQueue<>();
+
+	static Point bfs(int y, int x) {
 		boolean[][] visited = new boolean[n][n];
 		visited[y][x] = true;
 		q.add(new Point(y, x, 0));
 
-		List<Point> result = new ArrayList<>();
-
-		boolean found = false;
-		int min = Integer.MAX_VALUE;
-
 		while (!q.isEmpty()) {
 			Point p = q.poll();
+			if (sea[p.y][p.x] != 0 && sea[p.y][p.x] < size) {
+				return p;
+			}
 
 			for (int i = 0; i < 4; i++) {
 				int cy = p.y + dir[i][0];
@@ -110,23 +102,12 @@ public class Main {
 				if (cy < 0 || cx < 0 || cy >= n || cx >= n || visited[cy][cx] || sea[cy][cx] > size)
 					continue;
 
-				Point next = new Point(cy, cx, p.distance + 1);
-				if (sea[cy][cx] != 0 && sea[cy][cx] < size) {
-					if (!found) {
-						min = next.distance;
-						result.add(next);
-						found = true;
-					} else if (min == next.distance) {
-						result.add(next);
-					}
-				}
-
 				visited[cy][cx] = true;
-				q.add(next);
+				q.add(new Point(cy, cx, p.distance + 1));
 			}
 		}
 
-		return result;
+		return null;
 	}
 
 }
