@@ -1,36 +1,32 @@
 import java.util.*;
 
 class Solution {
-    public long solution(int n, int[] times) {        
-        long start = times[0], 
-            end = times[0]
-                ,mid 
-                ,answer;
-        
-        for(int i = 1; i < times.length; i++ ) {
-            start = Math.min(start, times[i]);
-            end = Math.max(end, times[i]);
-        }
-        end = end * n;
-        answer = end;
+    public long solution(int n, int[] times) {
+        Arrays.sort(times);
+        long start = 0;
+        long end = Long.valueOf(times[times.length - 1]) * Long.valueOf(n);
+        long ans = end;
         
         while(start <= end) {
-            mid = (start + end) / 2L;
+            long mid = (start + end) / 2L;
             
-            long complete = 0; 
+            long t = 0;
+            
             for(int i = 0; i < times.length; i++ ) {
-                complete += (mid / times[i]);
+                t += (mid / times[i]);
             }
             
-            
-            if(complete < n)
-                start = mid + 1;
+            if(t < n) {
+                start = mid + 1L;
+            }
             else {
-                answer = mid;
-                end = mid - 1;
+                ans = Math.min(ans, mid);
+                end = mid - 1L;   
             }
         }
         
-        return answer;
+        
+        return ans;
     }
+
 }
