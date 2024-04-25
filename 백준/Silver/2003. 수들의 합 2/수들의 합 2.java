@@ -15,18 +15,21 @@ public class Main {
 		String[] nums = br.readLine().split(" ");
 		int[] numbers = Arrays.stream(nums).mapToInt(Main::stoi).toArray();
 
-		for(int s = 0; s < N; s++) {
-			int sum = 0;
+		int s = 0;
+		int e = 1;
 
-			for(int e = s; e < N; e++) {
-				sum += numbers[e];
-				if(sum == M) {
-					count++;
-				} 
-				if(sum >= M) {
+		int sum = numbers[0];
+
+		while(s < N && e <= N) {
+			if(sum < M) {
+				if(e == N)
 					break;
-				}
+				sum += numbers[e++];
+				continue;
+			} else if(sum == M) {
+				count++;
 			}
+			sum -= numbers[s++];
 		}
 
 		bw.write(itos(count));
