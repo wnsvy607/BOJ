@@ -13,15 +13,12 @@ class Solution {
         
         for(String city : cities) {
             // 캐시 미스
-            
             String key = city.toLowerCase();
             if(!db.contains(key)) {
                 // 캐시에 더 넣을 공간이 없을 때
                 if(q.size() >= cacheSize) {
-                    if(!q.isEmpty()) {
-                        String r = q.poll();    
-                        db.remove(r);
-                    }
+                    String r = q.poll();    
+                    db.remove(r);                
                 }
                 // 새로운 캐시 삽입
                 q.add(key);
@@ -35,7 +32,6 @@ class Solution {
                 q.add(key);
                 cost++;
             }
-            
         }
         
         
