@@ -2,69 +2,59 @@ import java.util.*;
 
 class Solution {
     public int solution(String str1, String str2) {
-        Map<String, Integer> A = getCollection(str1);
-        Map<String, Integer> B = getCollection(str2);
+        int answer = 0;
         
-        Map<String, Integer> common = new HashMap<>(A);
+        Map<String, Integer> A = new HashMap<>();
+        Map<String, Integer> B = new HashMap<>();
+        Set<String> set = new HashSet<>();
         
         
-        for(var el: B.entrySet()) {
-            String key = el.getKey();
-            if(common.containsKey(key)) {
-                common.put(key, Math.min(common.get(key), el.getValue()));
-            } 
+        str1 = str1.toLowerCase();
+        str2 = str2.toLowerCase();
+        
+        // System.out.println(str1);
+        // System.out.println(str2);
+        
+        
+        for(int i = 0; i < str1.length() - 1; i++) {
+            String el = str1.substring(i, i + 2);
+            if(!el.matches("[a-zA-Z]+"))
+                continue;
+            System.out.println(el);
+            A.put(el, A.getOrDefault(el, 0) + 1);            
+            set.add(el);
         }
         
-        for(var el: A.entrySet()) {
-            String key = el.getKey();
-            if(common.containsKey(key) && !B.containsKey(key)) 
-                common.remove(key);
-        }
+        for(int i = 0; i < str2.length() - 1; i++) {
+            String el = str2.substring(i, i + 2);
+            if(!el.matches("[a-zA-Z]+"))
+                continue;
+            B.put(el, B.getOrDefault(el, 0) + 1);
+            set.add(el);
+        }        
         
-        int c = 0;
-        
-        for(var el: common.entrySet()) {
-            c += el.getValue();
-        }
-        
-        
-        Map<String, Integer> sum = new HashMap<>(A);
-        
-        for(var el: B.entrySet()) {
-            String key = el.getKey();
-            int value = el.getValue();
-            if(sum.containsKey(key)) {
-                sum.put(key, Math.max(sum.get(key), value));
-            } else {
-                sum.put(key, value);
-            }
-        }
-        
-        int s = 0;
-        
-        for(var el: sum.entrySet()) {
-            s += el.getValue();
-        }
-        
-        if(s == 0)
+        if(set.isEmpty())
             return 65536;
         
-        double answer = 65536 * c / s;
+        int intersection = 0;
         
-        return (int) answer;
-    }
-    
-    public Map<String, Integer> getCollection(String str) {
-        Map<String, Integer> result = new HashMap<>();
-        int len = str.length() - 1;
-        for(int i = 0; i < len; i++) {
-            String element = str.substring(i, i + 2).toUpperCase();
-            if(!element.matches("[A-Z]{2}+")) {
-                continue;
+        for(var el : set) {
+            if(A.containsKey(el) && B.containsKey(el)) {
+                intersection += Math.min(A.get(el), B.get(el));
             }
-            
-            result.put(element, result.getOrDefault(element, 0) + 1);
         }
-        return result;
+        
+        int union = 0;
+        for(var el : set) {
+            int a = A.containsKey(el) ? A.get(el) : 0;
+            int b = B.containsKey(el) ? B.get(el) : 0;
+            
+            union += Math.max(a, b);
+
+        }
+        
+        
+        
+        return 65536 * intersection / union;
     }
 }
