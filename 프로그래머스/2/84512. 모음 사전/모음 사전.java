@@ -1,35 +1,35 @@
+import java.util.*;
+
 class Solution {
     
-    String target;
-    char[] cand = {'A', 'E', 'I', 'O', 'U'};
-    int order;
-    int answer;
+    Set<String> set;
+    
     public int solution(String word) {
+        set = new TreeSet<>();
+        recur(5, "");
+        set.remove("");
         
-        target = word;
-        order = -1;
-        recursive(5, false, "");
+        var it = set.iterator();
+        int count = 0;
+        while(it.hasNext()) {
+            if(it.next().equals(word))
+                break;
+            count++;
+        }
         
-        return answer;
+        return count + 1;
     }
     
-    void recursive(int h, boolean blank, String result) {
-        if(answer > 0)
-            return;
-        if(h == 0) {
-            order++;
-            if(result.replace(" ", "").equals(target))
-                answer = order;
+    String[] str = {"", "A", "E", "I", "O", "U"};
+    
+    void recur(int r, String result) {
+        if(r == 0) {
+            set.add(result);
             return;
         }
         
-        recursive(h - 1, true, result + ' ');
-        
-        if(!blank) {
-            for(int i = 0; i < 5; i++) {
-                recursive(h - 1, false, result + cand[i]);
-            }      
+        for(int i = 0; i < 6; i++) {
+            recur(r - 1, result + str[i]);
         }
-        
     }
 }
