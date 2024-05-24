@@ -5,25 +5,23 @@ class Solution {
         int answer = 0;
         Arrays.sort(A);
         
-        TreeSet<Integer> set = new TreeSet<>();
-        HashMap<Integer, Integer> map = new HashMap<>();
+        TreeMap<Integer, Integer> map = new TreeMap<>();
         
         for(int i = 0; i < B.length; i++) {
-            set.add(B[i]);
             map.put(B[i] , map.getOrDefault(B[i], 0) + 1);
         }
         
         
         for(int i = 0; i < A.length; i++) {
-            Integer idx = set.higher(A[i]);
-            if(idx == null)
+            var entry = map.higherEntry(A[i]);
+            if(entry == null)
                 continue;
             
-            int count = map.get(idx);
+            int count = entry.getValue();
             if(count == 1) {
-                set.remove(idx);
+                map.remove(entry.getKey());
             } else {
-                map.put(idx, count - 1);
+                map.put(entry.getKey(), count - 1);
             }
             answer++;
         }
