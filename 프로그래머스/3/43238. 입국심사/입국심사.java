@@ -20,7 +20,7 @@ class Solution {
                 start = mid + 1L;
             }
             else {
-                ans = Math.min(ans, mid);
+                ans = mid;
                 end = mid - 1L;   
             }
         }
