@@ -2,52 +2,69 @@ import java.util.*;
 
 class Solution {
     
-    Set<Integer> result = new HashSet<>();
-    int len;
+    Set<Integer> set = new HashSet<>();
+    List<Character> list = new ArrayList<>();
+    
+    int n;
     
     public int solution(String numbers) {
-        int[] arr = new int[numbers.length()];
-        len = numbers.length();
-        for(int i = 0; i < len; i++) {
-            arr[i] = Integer.parseInt(numbers.substring(i, i + 1));
+        
+        char[] arr = numbers.toCharArray();
+        
+        
+        for(char ch : arr) {
+            list.add(ch);
         }
         
-        for(int i = 1; i < len + 1; i++) {
-            permu(arr, new boolean[len], i, "");            
+        n = list.size();
+        boolean[] visited = new boolean[n];
+        
+        for(int i = 1; i <= n; i++) {
+            combi(i, "", visited);
         }
         
-
-        return result.size();
+        
+        return set.size();
     }
     
     
-    void permu(int[] arr, boolean[] visited, int h, String result) {
-        if(h == 0) {
-            checkIfPrime(result);
-            return;            
+    void combi(int r, String result, boolean[] visited) {
+        if(r == 0) {
+            prc(result);
+            return;
         }
         
-        for(int i = 0; i < len; i++) {
+        for(int i = 0; i < list.size(); i++) {
             if(visited[i])
                 continue;
             
             visited[i] = true;
-            permu(arr, visited, h - 1, result + arr[i]);
+            combi(r - 1, result + list.get(i), visited);
             visited[i] = false;
         }
         
     }
     
-    void checkIfPrime(String num) {
-        int number = Integer.parseInt(num);
-        if(number < 2)
+    
+    void prc(String str) {
+        int num = Integer.parseInt(str);
+        
+        if(set.contains(num) || num < 2)
             return;
         
-        for(int i = 2; i < number; i++) {
-            if(number % i == 0)
-                return;
+        if(checkIfPrime(num)) {
+            set.add(num);
         }
-        result.add(number);
+    }
+    
+    boolean checkIfPrime(int num) {
+        int end = (int) Math.sqrt(num);
+        for(int i = 2; i <= end; i++) {
+            if(num % i == 0)
+                return false;
+        }
+        
+        return true;
     }
     
 }
