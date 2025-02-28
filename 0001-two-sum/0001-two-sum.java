@@ -1,7 +1,4 @@
-import java.util.*;
-
 class Solution {
-
     public int[] twoSum(int[] nums, int target) {
 
         HashMap<Integer, List<Integer>> map = new HashMap<>();
@@ -24,6 +21,4 @@ class Solution {
 
         return null;
     }
-
-
 }
